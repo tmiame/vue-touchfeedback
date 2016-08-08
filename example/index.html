@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      padding: 6vw;
+      font-size: 15px;
+    }
+    section {
+      margin-bottom: 50px;
+    }
+    .Box {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background-color: gray;
+      -webkit-tap-highlight-color: transparent;
+      tap-highlight-color: transparent;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    .Box:before {
+      content: 'Touch';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      line-height: 200px;
+      text-align: center;
+      font-weight: bold;
+      color: #ffffff;
+    }
+    .Box.is-touch {
+      background-color: red;
+    }
+    .Box.is-touch:before {
+      content: '.is-hover';
+    }
+    .Box.is-click {
+      background-color: blue;
+    }
+    .Box.is-click:before {
+      content: '.is-click';
+    }
+    .DemoAnimation.is-touch {
+      animation: hover 500ms ease-out;
+    }
+    .DemoAnimation.is-click {
+      animation: click 500ms ease-out;
+    }
+    @keyframes hover {
+      0%,
+      100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    @keyframes click {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    pre {
+      width: 100%;
+      word-break: break-all;
+      word-wrap: break-word;
+      line-height: 1.6;
+      padding: 1.5em 2em;
+      margin: 0;
+      font-size: 90%;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: consolas, Courier, Monaco, monospace;
+      margin-top: 25px;
+    }
+    pre b {
+      color: #00ff00;
+    }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1>hover & click</h1>
+      <div class="Box" v-touchfeedback></div>
+      <pre>&lt;div class="Box" <b>v-touchfeedback</b>&gt;&lt;/div&gt;</pre>
+    </section>
+
+    <section>
+      <h1>hover animation & click animation</h1>
+      <div class="Box DemoAnimation" v-touchfeedback:animation.hover.click></div>
+      <pre>&lt;div class="Box" <b>v-touchfeedback:animation.hover.click</b>&gt;&lt;/div&gt;</pre>
+    </section>
+
+    <section>
+      <h1>hover animation</h1>
+      <div class="Box DemoAnimation" v-touchfeedback:animation.hover></div>
+      <pre>&lt;div class="Box" <b>v-touchfeedback:animation.hover</b>&gt;&lt;/div&gt;</pre>
+    </section>
+
+    <section>
+      <h1>click animation</h1>
+      <div class="Box DemoAnimation" v-touchfeedback:animation.click></div>
+      <pre>&lt;div class="Box" <b>v-touchfeedback:animation.click</b>&gt;&lt;/div&gt;</pre>
+    </section>
+
+    <script src="build.js"></script>
+  </body>
+</html>
