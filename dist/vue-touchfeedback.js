@@ -13,15 +13,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   var STATE_HOVER = 'is-touch';
   var STATE_CLICK = 'is-click';
 
-  /*
-   * 初期設定 config
-   */
   var conf = {
     isIE: window.navigator.userAgent.toLowerCase().indexOf('msie') !== -1,
     isTouch: typeof document.ontouchstart !== 'undefined',
     isPointer: typeof window.navigator.pointerEnabled !== 'undefined',
     isMSPoniter: typeof window.navigator.msPointerEnabled !== 'undefined',
-    // touch
     touch: {
       enter: 'touchstart',
       leave: 'touchend',
@@ -29,7 +25,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       move: 'touchmove',
       end: 'touchend'
     },
-    // pointer
     pointer: {
       enter: 'pointerenter',
       leave: 'pointerleave',
@@ -37,7 +32,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       move: 'pointermove',
       end: 'pointerup'
     },
-    // pointer
     msPointer: {
       enter: 'MSPointerOver',
       leave: 'MSPointerOut',
@@ -45,7 +39,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       move: 'MSPointerMove',
       end: 'MSPointerUp'
     },
-    // mouse
     mouse: {
       enter: 'mouseenter',
       leave: 'mouseleave',
@@ -68,18 +61,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       priority: Vue.directive('on').priority,
       TAP: false,
 
-      /**
-       * タップ時に発火するイベント
-       */
       touchAddClass: function touchAddClass(e) {
         this.classList.add(STATE_HOVER);
       },
-
-
-      /**
-       * タップイベントに対応していないデバイスで
-       * クリック時に発火するイベント
-       */
       tapedTouchStart: function tapedTouchStart(e) {
         this.TAP = true;
       },
