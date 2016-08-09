@@ -1,7 +1,7 @@
 {
   "name": "vue-touchfeedback",
   "description": "Vue.js Touch Feedback",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "tmiame <tmaime@gmail.com> (https://tmiame.com/)",
   "license": "MIT",
   "main": "dist/vue-touchfeedback.js",
