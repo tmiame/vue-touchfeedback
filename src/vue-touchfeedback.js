@@ -1,3 +1,8 @@
+/*!
+ * vue-touchfeedback.js
+ * (c) 2016 tmiame
+ * Released under the MIT License.
+ */
 ;(function () {
 
   const vueTouchFeedback = {}

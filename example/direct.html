@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      padding: 6vw;
+      font-size: 15px;
+    }
+    .Box {
+      background-color: white;
+    }
+    .Box.is-touch {
+      background-color: gray;
+    }
+    .Box.is-click {
+      background-color: blue;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1 class="Box" v-touchfeedback>
+        {{ message }}
+      </h1>
+    </div>
+  <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+  <script src="../dist/vue-touchfeedback.js"></script>
+  <script>
+  new Vue({
+      el: '#app',
+      data: {
+          message: 'Hello Vue.js! Touch me'
+      }
+  })
+  </script>
+  </body>
+</html>
