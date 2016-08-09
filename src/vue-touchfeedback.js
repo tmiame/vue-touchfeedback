@@ -174,5 +174,13 @@
     })
   }
 
-  module.exports = vueTouchFeedback
+  if (typeof exports == 'object') {
+    module.exports = vueTouchFeedback
+  } else if (typeof define == 'function' && define.amd) {
+    define([], function(){ return vueTouchFeedback })
+  } else if (window.Vue) {
+    window.VueTouchFeedback = vueTouchFeedback
+    Vue.use(vueTouchFeedback)
+  }
+
 })()
