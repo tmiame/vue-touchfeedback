@@ -92,15 +92,29 @@
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        return setTimeout(fun, 0);
-	    } else {
-	        return cachedSetTimeout.call(null, fun, 0);
+	    }
+	    try {
+	        return cachedSetTimeout(fun, 0);
+	    } catch (e) {
+	        try {
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch (e) {
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
 	    }
 	}
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
-	        clearTimeout(marker);
-	    } else {
-	        cachedClearTimeout.call(null, marker);
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        return cachedClearTimeout(marker);
+	    } catch (e) {
+	        try {
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e) {
+	            return cachedClearTimeout.call(this, marker);
+	        }
 	    }
 	}
 	var queue = [];
@@ -200,9 +214,11 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	;(function () {
 
@@ -364,7 +380,16 @@
 	    });
 	  };
 
-	  module.exports = vueTouchFeedback;
+	  if (( false ? 'undefined' : _typeof(exports)) == 'object') {
+	    module.exports = vueTouchFeedback;
+	  } else if (true) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+	      return vueTouchFeedback;
+	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  } else if (window.Vue) {
+	    window.VueTouchFeedback = vueTouchFeedback;
+	    Vue.use(vueTouchFeedback);
+	  }
 	})();
 
 /***/ }

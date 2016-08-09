@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 ;(function () {
 
   var vueTouchFeedback = {};
@@ -177,5 +179,14 @@
     });
   };
 
-  module.exports = vueTouchFeedback;
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == 'object') {
+    module.exports = vueTouchFeedback;
+  } else if (typeof define == 'function' && define.amd) {
+    define([], function () {
+      return vueTouchFeedback;
+    });
+  } else if (window.Vue) {
+    window.VueTouchFeedback = vueTouchFeedback;
+    Vue.use(vueTouchFeedback);
+  }
 })();
