@@ -9,15 +9,11 @@
   const STATE_HOVER = 'is-touch'
   const STATE_CLICK = 'is-click'
 
-  /*
-   * 初期設定 config
-   */
   const conf = {
     isIE: (window.navigator.userAgent.toLowerCase().indexOf('msie') !== -1),
     isTouch: (typeof document.ontouchstart !== 'undefined'),
     isPointer: (typeof window.navigator.pointerEnabled !== 'undefined'),
     isMSPoniter: (typeof window.navigator.msPointerEnabled !== 'undefined'),
-    // touch
     touch: {
       enter: 'touchstart',
       leave: 'touchend',
@@ -25,7 +21,6 @@
       move: 'touchmove',
       end: 'touchend'
     },
-    // pointer
     pointer: {
       enter: 'pointerenter',
       leave: 'pointerleave',
@@ -33,7 +28,6 @@
       move: 'pointermove',
       end: 'pointerup'
     },
-    // pointer
     msPointer: {
       enter: 'MSPointerOver',
       leave: 'MSPointerOut',
@@ -41,7 +35,6 @@
       move: 'MSPointerMove',
       end: 'MSPointerUp'
     },
-    // mouse
     mouse: {
       enter: 'mouseenter',
       leave: 'mouseleave',
@@ -65,17 +58,10 @@
       priority: Vue.directive('on').priority,
       TAP: false,
 
-      /**
-       * タップ時に発火するイベント
-       */
       touchAddClass(e) {
         this.classList.add(STATE_HOVER)
       },
 
-      /**
-       * タップイベントに対応していないデバイスで
-       * クリック時に発火するイベント
-       */
       tapedTouchStart(e) {
         this.TAP = true
       },

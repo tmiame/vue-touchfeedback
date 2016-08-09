@@ -100,7 +100,7 @@ ___
 
 ## Install
 
-__npm__ (https://www.npmjs.com/package/vue-touchfeedback)
+__npm__(https://www.npmjs.com/package/vue-touchfeedback)
 
 ```
 npm install vue-touchfeedback
