@@ -127,7 +127,7 @@ Vue.use(VueTouchFeedback)
 
 __Direct include__
 
-You can also directly include it with a <script> tag when you have Vue already included globally. It will automatically install itself, and will add a global VueTouchFeedback.
+You can also directly include it with a `<script>` tag when you have Vue already included globally. It will automatically install itself, and will add a global VueTouchFeedback.
 
 ## License
 
