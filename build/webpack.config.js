@@ -11,6 +11,10 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.vue$/,
+        loader: 'vue'
+      },
+      {
         test: /\.js$/,
         loader: 'babel'
       },
@@ -18,6 +22,6 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.vue']
   }
 }

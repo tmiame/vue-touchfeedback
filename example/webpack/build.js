@@ -46,14 +46,27 @@
 
 	'use strict';
 
-	var Vue = __webpack_require__(1);
-	var VueTouchFeedback = __webpack_require__(3);
+	var _vue = __webpack_require__(1);
 
-	Vue.use(VueTouchFeedback);
+	var _vue2 = _interopRequireDefault(_vue);
 
-	new Vue({
-	  el: 'body'
-	});
+	var _vueTouchfeedback = __webpack_require__(3);
+
+	var _vueTouchfeedback2 = _interopRequireDefault(_vueTouchfeedback);
+
+	var _App = __webpack_require__(4);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	_vue2.default.use(_vueTouchfeedback2.default);
+
+	new _vue2.default({
+	  render: function render(h) {
+	    return h(_App2.default);
+	  }
+	}).$mount('#app');
 
 /***/ },
 /* 1 */
@@ -249,10 +262,11 @@
 	;(function () {
 
 	  var vueTouchFeedback = {};
+
 	  var STATE_HOVER = 'is-touch';
 	  var STATE_CLICK = 'is-click';
 
-	  var conf = {
+	  var CONFIG = {
 	    isIE: window.navigator.userAgent.toLowerCase().indexOf('msie') !== -1,
 	    isTouch: typeof document.ontouchstart !== 'undefined',
 	    isPointer: typeof window.navigator.pointerEnabled !== 'undefined',
@@ -287,116 +301,139 @@
 	    }
 	  };
 
-	  var eventPointer = {
-	    enter: conf.isTouch ? conf.touch.enter : conf.isPointer ? conf.pointer.enter : conf.isMSPointer ? conf.msPointer.enter : conf.mouse.enter,
-	    leave: conf.isTouch ? conf.touch.leave : conf.isPointer ? conf.pointer.leave : conf.isMSPointer ? conf.msPointer.leave : conf.mouse.leave,
-	    start: conf.isTouch ? conf.touch.start : conf.isPointer ? conf.pointer.start : conf.isMSPointer ? conf.msPointer.start : conf.mouse.start,
-	    move: conf.isTouch ? conf.touch.move : conf.isPointer ? conf.pointer.move : conf.isMSPointer ? conf.msPointer.move : conf.mouse.move,
-	    end: conf.isTouch ? conf.touch.end : conf.isPointer ? conf.pointer.end : conf.isMSPointer ? conf.msPointer.end : conf.mouse.end
+	  var POINTER_EVENT = {
+	    enter: CONFIG.isTouch ? CONFIG.touch.enter : CONFIG.isPointer ? CONFIG.pointer.enter : CONFIG.isMSPointer ? CONFIG.msPointer.enter : CONFIG.mouse.enter,
+	    leave: CONFIG.isTouch ? CONFIG.touch.leave : CONFIG.isPointer ? CONFIG.pointer.leave : CONFIG.isMSPointer ? CONFIG.msPointer.leave : CONFIG.mouse.leave,
+	    start: CONFIG.isTouch ? CONFIG.touch.start : CONFIG.isPointer ? CONFIG.pointer.start : CONFIG.isMSPointer ? CONFIG.msPointer.start : CONFIG.mouse.start,
+	    move: CONFIG.isTouch ? CONFIG.touch.move : CONFIG.isPointer ? CONFIG.pointer.move : CONFIG.isMSPointer ? CONFIG.msPointer.move : CONFIG.mouse.move,
+	    end: CONFIG.isTouch ? CONFIG.touch.end : CONFIG.isPointer ? CONFIG.pointer.end : CONFIG.isMSPointer ? CONFIG.msPointer.end : CONFIG.mouse.end
+	  };
+
+	  var TOUCH_EVENT = {
+	    TAP: false,
+
+	    touchAddClass: function touchAddClass(el) {
+	      return function (ev) {
+	        return el.classList.add(STATE_HOVER);
+	      };
+	    },
+	    tapedTouchStart: function tapedTouchStart(el) {
+	      var _this = this;
+
+	      return function (ev) {
+	        return _this.TAP = true;
+	      };
+	    },
+	    tapedTouchMove: function tapedTouchMove(el) {
+	      var _this2 = this;
+
+	      return function (ev) {
+	        if (_this2.TAP) _this2.TAP = false;
+	      };
+	    },
+	    tapedTouchEnd: function tapedTouchEnd(el) {
+	      var _this3 = this;
+
+	      return function (ev) {
+	        if (!_this3.TAP) {
+	          return;
+	        }
+	        el.classList.add(STATE_CLICK);
+	        setTimeout(function () {
+	          el.classList.remove(STATE_CLICK);
+	        }, 100);
+	      };
+	    },
+	    tapedTouchEndAnimation: function tapedTouchEndAnimation(el) {
+	      var _this4 = this;
+
+	      return function (ev) {
+	        if (!_this4.TAP) {
+	          return;
+	        }
+	        el.classList.add(STATE_CLICK);
+	      };
+	    },
+	    removeHover: function removeHover(el) {
+	      return function (ev) {
+	        return el.classList.remove(STATE_HOVER);
+	      };
+	    },
+	    removeClick: function removeClick(el) {
+	      return function (ev) {
+	        return el.classList.remove(STATE_CLICK);
+	      };
+	    },
+	    removeAll: function removeAll(el) {
+	      return function (ev) {
+	        if (el.classList.contains(STATE_HOVER)) {
+	          el.classList.remove(STATE_HOVER);
+	        }
+	        if (el.classList.contains(STATE_CLICK)) {
+	          el.classList.remove(STATE_CLICK);
+	        }
+	      };
+	    }
 	  };
 
 	  vueTouchFeedback.install = function (Vue) {
 	    Vue.directive('touchfeedback', {
-	      priority: Vue.directive('on').priority,
-	      TAP: false,
-
-	      touchAddClass: function touchAddClass(e) {
-	        this.classList.add(STATE_HOVER);
-	      },
-	      tapedTouchStart: function tapedTouchStart(e) {
-	        this.TAP = true;
-	      },
-	      tapedTouchMove: function tapedTouchMove(e) {
-	        if (this.TAP) this.TAP = false;
-	      },
-	      tapedTouchEnd: function tapedTouchEnd(e) {
-	        var _this = this;
-
-	        if (!this.TAP) {
-	          return;
-	        }
-	        this.classList.add(STATE_CLICK);
-	        setTimeout(function () {
-	          _this.classList.remove(STATE_CLICK);
-	        }, 100);
-	      },
-	      tapedTouchEndAnimation: function tapedTouchEndAnimation(e) {
-	        if (!this.TAP) {
-	          return;
-	        }
-	        this.classList.add(STATE_CLICK);
-	      },
-	      removeHover: function removeHover() {
-	        this.classList.remove(STATE_HOVER);
-	      },
-	      removeClick: function removeClick() {
-	        this.classList.remove(STATE_CLICK);
-	      },
-	      removeAll: function removeAll() {
-	        if (this.el.classList.contains(STATE_HOVER)) {
-	          this.el.classList.remove(STATE_HOVER);
-	        }
-	        if (this.el.classList.contains(STATE_CLICK)) {
-	          this.el.classList.remove(STATE_CLICK);
-	        }
-	      },
-	      bind: function bind() {
-	        if (this.arg && this.arg !== 'animation') {
-	          console.warn('[vue-touchfeedback] arg error');
+	      bind: function bind(el, binding) {
+	        if (binding.arg && binding.arg !== 'animation') {
+	          console.warn('[vue-touchfeedback] arg name error');
 	        }
 
-	        if (this.arg === 'animation') {
-	          if (this.modifiers.hover) {
-	            this.el.addEventListener(eventPointer.enter, this.touchAddClass, false);
-	            this.el.addEventListener('webkitAnimationEnd', this.removeHover, false);
-	            this.el.addEventListener('MSAnimationEnd', this.removeHover, false);
-	            this.el.addEventListener('oanimationend', this.removeHover, false);
-	            this.el.addEventListener('animationend', this.removeHover, false);
+	        if (binding.arg === 'animation') {
+	          if (binding.modifiers.hover) {
+	            el.addEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false);
+	            el.addEventListener('webkitAnimationEnd', TOUCH_EVENT.removeHover(el), false);
+	            el.addEventListener('MSAnimationEnd', TOUCH_EVENT.removeHover(el), false);
+	            el.addEventListener('oanimationend', TOUCH_EVENT.removeHover(el), false);
+	            el.addEventListener('animationend', TOUCH_EVENT.removeHover(el), false);
 	          }
-	          if (this.modifiers.click) {
-	            this.el.addEventListener(eventPointer.start, this.tapedTouchStart, false);
-	            this.el.addEventListener(eventPointer.move, this.tapedTouchMove, false);
-	            this.el.addEventListener(eventPointer.end, this.tapedTouchEndAnimation, false);
-	            this.el.addEventListener('webkitAnimationEnd', this.removeClick, false);
-	            this.el.addEventListener('MSAnimationEnd', this.removeClick, false);
-	            this.el.addEventListener('oanimationend', this.removeClick, false);
-	            this.el.addEventListener('animationend', this.removeClick, false);
+	          if (binding.modifiers.click) {
+	            el.addEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false);
+	            el.addEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false);
+	            el.addEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEndAnimation(el), false);
+	            el.addEventListener('webkitAnimationEnd', TOUCH_EVENT.removeClick(el), false);
+	            el.addEventListener('MSAnimationEnd', TOUCH_EVENT.removeClick(el), false);
+	            el.addEventListener('oanimationend', TOUCH_EVENT.removeClick(el), false);
+	            el.addEventListener('animationend', TOUCH_EVENT.removeClick(el), false);
 	          }
 	        } else {
-	          this.el.addEventListener(eventPointer.enter, this.touchAddClass, false);
-	          this.el.addEventListener(eventPointer.leave, this.removeHover, false);
+	          el.addEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false);
+	          el.addEventListener(POINTER_EVENT.leave, TOUCH_EVENT.removeHover(el), false);
 
-	          this.el.addEventListener(eventPointer.start, this.tapedTouchStart, false);
-	          this.el.addEventListener(eventPointer.move, this.tapedTouchMove, false);
-	          this.el.addEventListener(eventPointer.end, this.tapedTouchEnd, false);
+	          el.addEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false);
+	          el.addEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false);
+	          el.addEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEnd(el), false);
 	        }
 	      },
-	      unbind: function unbind() {
-	        this.removeAll();
-	        if (this.arg === 'animation') {
-	          if (this.modifiers.hover) {
-	            this.el.removeEventListener(eventPointer.enter, this.touchAddClass, false);
-	            this.el.removeEventListener('webkitAnimationEnd', this.removeHover, false);
-	            this.el.removeEventListener('MSAnimationEnd', this.removeHover, false);
-	            this.el.removeEventListener('oanimationend', this.removeHover, false);
-	            this.el.removeEventListener('animationend', this.removeHover, false);
+	      unbind: function unbind(el, binding) {
+	        if (binding.arg === 'animation') {
+	          if (binding.modifiers.hover) {
+	            el.removeEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false);
+	            el.removeEventListener('webkitAnimationEnd', TOUCH_EVENT.removeHover(el), false);
+	            el.removeEventListener('MSAnimationEnd', TOUCH_EVENT.removeHover(el), false);
+	            el.removeEventListener('oanimationend', TOUCH_EVENT.removeHover(el), false);
+	            el.removeEventListener('animationend', TOUCH_EVENT.removeHover(el), false);
 	          }
-	          if (this.modifiers.click) {
-	            this.el.removeEventListener(eventPointer.start, this.tapedTouchStart, false);
-	            this.el.removeEventListener(eventPointer.move, this.tapedTouchMove, false);
-	            this.el.removeEventListener(eventPointer.end, this.tapedTouchEndAnimation, false);
-	            this.el.removeEventListener('webkitAnimationEnd', this.removeClick, false);
-	            this.el.removeEventListener('MSAnimationEnd', this.removeClick, false);
-	            this.el.removeEventListener('oanimationend', this.removeClick, false);
-	            this.el.removeEventListener('animationend', this.removeClick, false);
+	          if (binding.modifiers.click) {
+	            el.removeEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false);
+	            el.removeEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false);
+	            el.removeEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEndAnimation(el), false);
+	            el.removeEventListener('webkitAnimationEnd', TOUCH_EVENT.removeClick(el), false);
+	            el.removeEventListener('MSAnimationEnd', TOUCH_EVENT.removeClick(el), false);
+	            el.removeEventListener('oanimationend', TOUCH_EVENT.removeClick(el), false);
+	            el.removeEventListener('animationend', TOUCH_EVENT.removeClick(el), false);
 	          }
 	        } else {
-	          this.el.removeEventListener(eventPointer.enter, this.touchAddClass, false);
-	          this.el.removeEventListener(eventPointer.leave, this.removeHover, false);
+	          el.removeEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false);
+	          el.removeEventListener(POINTER_EVENT.leave, TOUCH_EVENT.removeHover(el), false);
 
-	          this.el.removeEventListener(eventPointer.start, this.tapedTouchStart, false);
-	          this.el.removeEventListener(eventPointer.move, this.tapedTouchMove, false);
-	          this.el.removeEventListener(eventPointer.end, this.tapedTouchEnd, false);
+	          el.removeEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false);
+	          el.removeEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false);
+	          el.removeEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEnd(el), false);
 	        }
 	      }
 	    });
@@ -413,6 +450,130 @@
 	    Vue.use(vueTouchFeedback);
 	  }
 	})();
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_exports__, __vue_options__
+
+	/* script */
+	__vue_exports__ = __webpack_require__(5)
+
+	/* template */
+	var __vue_template__ = __webpack_require__(6)
+	__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+	if (
+	  typeof __vue_exports__.default === "object" ||
+	  typeof __vue_exports__.default === "function"
+	) {
+	if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+	__vue_options__ = __vue_exports__ = __vue_exports__.default
+	}
+	if (typeof __vue_options__ === "function") {
+	  __vue_options__ = __vue_options__.options
+	}
+	__vue_options__.render = __vue_template__.render
+	__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+	/* hot reload */
+	if (false) {(function () {
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), false)
+	  if (!hotAPI.compatible) return
+	  module.hot.accept()
+	  if (!module.hot.data) {
+	    hotAPI.createRecord("data-v-1", __vue_options__)
+	  } else {
+	    hotAPI.reload("data-v-1", __vue_options__)
+	  }
+	})()}
+	if (__vue_options__.functional) {console.error("[vue-loader] App.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+	module.exports = __vue_exports__
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = {
+	  name: 'app',
+
+	  data: function data() {
+	    return {};
+	  }
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports={render:function (){with(this) {
+	  return _h('div', {
+	    staticClass: "app"
+	  }, [_h('section', [_m(0), " ", _h('div', {
+	    directives: [{
+	      name: "touchfeedback"
+	    }],
+	    staticClass: "Box"
+	  }), " ", _m(1)]), " ", _h('section', [_m(2), " ", _h('div', {
+	    directives: [{
+	      name: "touchfeedback",
+	      arg: "animation",
+	      modifiers: {
+	        "hover": true,
+	        "click": true
+	      }
+	    }],
+	    staticClass: "Box DemoAnimation"
+	  }), " ", _m(3)]), " ", _h('section', [_m(4), " ", _h('div', {
+	    directives: [{
+	      name: "touchfeedback",
+	      arg: "animation",
+	      modifiers: {
+	        "hover": true
+	      }
+	    }],
+	    staticClass: "Box DemoAnimation"
+	  }), " ", _m(5)]), " ", _h('section', [_m(6), " ", _h('div', {
+	    directives: [{
+	      name: "touchfeedback",
+	      arg: "animation",
+	      modifiers: {
+	        "click": true
+	      }
+	    }],
+	    staticClass: "Box DemoAnimation"
+	  }), " ", _m(7)])])
+	}},staticRenderFns: [function (){with(this) {
+	  return _h('h1', ["hover & click"])
+	}},function (){with(this) {
+	  return _h('pre', ["<div class=\"Box\" ", _h('b', ["v-touchfeedback"]), "></div>"])
+	}},function (){with(this) {
+	  return _h('h1', ["hover animation & click animation"])
+	}},function (){with(this) {
+	  return _h('pre', ["<div class=\"Box\" ", _h('b', ["v-touchfeedback:animation.hover.click"]), "></div>"])
+	}},function (){with(this) {
+	  return _h('h1', ["hover animation"])
+	}},function (){with(this) {
+	  return _h('pre', ["<div class=\"Box\" ", _h('b', ["v-touchfeedback:animation.hover"]), "></div>"])
+	}},function (){with(this) {
+	  return _h('h1', ["click animation"])
+	}},function (){with(this) {
+	  return _h('pre', ["<div class=\"Box\" ", _h('b', ["v-touchfeedback:animation.click"]), "></div>"])
+	}}]}
+	if (false) {
+	  module.hot.accept()
+	  if (module.hot.data) {
+	     require("vue-hot-reload-api").rerender("data-v-1", module.exports)
+	  }
+	}
 
 /***/ }
 /******/ ]);

@@ -1,35 +1,32 @@
-// いくつかのコンポーネントを定義します
-var Foo = {
-  template: '<p>This is foo!</p> <a v-link="{ path: \'/bar\' }" v-touchfeedback>Go to bar</a>'
-}
+// 0. If using a module system, call Vue.use(VueRouter)
 
-var Bar = {
-  template: '<p>This is bar!</p> <a v-link="{ path: \'/foo\' }" v-touchfeedback>Go to Foo</a>'
-}
+// 1. Define route components.
+// These can be imported from other files
+const Foo = { template: '<div><div>foo</div><router-link to="/bar" v-touchfeedback>Go to Bar</router-link></div>' }
+const Bar = { template: '<div><div>bar</div><router-link to="/foo" v-touchfeedback>Go to Foo</router-link></div>' }
 
-// router は、レンダリングするために1つの root コンポーネントが必要です
-// デモ目的向けで、app テンプレートとして HTML を使用しているため、空を使用します
-var App = {}
+// 2. Define some routes
+// Each route should map to a component. The "component" can
+// either be an actual component constructor created via
+// Vue.extend(), or just a component options object.
+// We'll talk about nested routes later.
+const routes = [
+  { path: '/foo', component: Foo },
+  { path: '/bar', component: Bar }
+]
 
-// router インスタンスを作成。
-// ここでは追加的なオプションで渡すことができますが、今はシンプルに保っています
-var router = new VueRouter()
-
-// いくつかの routes を定義します
-// route 毎、コンポーネントにマップが必要です
-// "component" は 事実上コンポーネントコンストラクタは Vue.extend() 経由で作成されるか、
-// または適切なコンポーネントオプションオブジェクトでできます
-// nested routes については後で話します
-router.map({
-  '/foo': {
-    component: Foo
-  },
-  '/bar': {
-    component: Bar
-  }
+// 3. Create the router instance and pass the `routes` option
+// You can pass in additional options here, but let's
+// keep it simple for now.
+const router = new VueRouter({
+  routes
 })
 
-// 今 アプリケーションを開始することが出来ます！
-// router は App のインスタンスを作成し、
-// そして #app セレクタでマッチングした要素にマウントします
-router.start(App, '#app')
+// 4. Create and mount the root instance.
+// Make sure to inject the router with the router option to make the
+// whole app router-aware.
+const app = new Vue({
+  router
+}).$mount('#app')
+
+// Now the app has started!
