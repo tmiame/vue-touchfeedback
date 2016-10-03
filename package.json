@@ -1,7 +1,7 @@
 {
   "name": "vue-touchfeedback",
   "description": "Vue.js Touch Feedback",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "author": "tmiame <tmaime@gmail.com> (https://tmiame.com/)",
   "license": "MIT",
   "main": "dist/vue-touchfeedback.js",
@@ -23,12 +23,14 @@
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",
     "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
-    "vue": "^1.0.26",
-    "webpack": "^1.13.1"
+    "babel-preset-es2015": "^6.16.0",
+    "vue": "^1.0.28",
+    "webpack": "^1.13.2"
   },
   "scripts": {
     "build": "babel src/vue-touchfeedback.js --out-file dist/vue-touchfeedback.js",
-    "dev": "webpack --progress --config --watch"
+    "dev": "babel src/vue-touchfeedback.js --watch --out-file dist/vue-touchfeedback.js",
+    "dev-server": "node build/dev-server.js",
+    "dev-example-webpack": "webpack --progress --config build/webpack.config.js --watch"
   }
 }

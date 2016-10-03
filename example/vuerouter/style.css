@@ -1,0 +1,8 @@
+.v-link-active {
+    color: red;
+}
+
+.is-touch {
+    color: green;
+    font-weight: bold;
+}

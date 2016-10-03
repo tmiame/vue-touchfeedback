@@ -1,5 +1,5 @@
 const Vue = require('vue')
-const VueTouchFeedback = require('../src/vue-touchfeedback')
+const VueTouchFeedback = require('../../dist/vue-touchfeedback')
 
 Vue.use(VueTouchFeedback)
 

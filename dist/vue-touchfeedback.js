@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*!
  * vue-touchfeedback.js
@@ -87,9 +87,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         this.classList.add(STATE_CLICK);
       },
-
-
-      // remove
       removeHover: function removeHover() {
         this.classList.remove(STATE_HOVER);
       },
@@ -127,10 +124,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.el.addEventListener('animationend', this.removeClick, false);
           }
         } else {
-          // Hover
           this.el.addEventListener(eventPointer.enter, this.touchAddClass, false);
           this.el.addEventListener(eventPointer.leave, this.removeHover, false);
-          // Click
+
           this.el.addEventListener(eventPointer.start, this.tapedTouchStart, false);
           this.el.addEventListener(eventPointer.move, this.tapedTouchMove, false);
           this.el.addEventListener(eventPointer.end, this.tapedTouchEnd, false);
@@ -156,10 +152,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.el.removeEventListener('animationend', this.removeClick, false);
           }
         } else {
-          // Hover
           this.el.removeEventListener(eventPointer.enter, this.touchAddClass, false);
           this.el.removeEventListener(eventPointer.leave, this.removeHover, false);
-          // Click
+
           this.el.removeEventListener(eventPointer.start, this.tapedTouchStart, false);
           this.el.removeEventListener(eventPointer.move, this.tapedTouchMove, false);
           this.el.removeEventListener(eventPointer.end, this.tapedTouchEnd, false);
