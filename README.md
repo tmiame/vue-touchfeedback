@@ -102,8 +102,14 @@ ___
 
 __npm__(https://www.npmjs.com/package/vue-touchfeedback)
 
+# Vue.js 2.0.x
+```bash
+npm install vue-touchfeedback --save-dev
 ```
-npm install vue-touchfeedback
+
+# Vue.js 1.0.xx
+```bash
+npm install vue-touchfeedback@1.0.6 --save-dev
 ```
 
 or   
