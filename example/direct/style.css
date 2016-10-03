@@ -1,0 +1,12 @@
+.title {
+  padding: 3rem;
+  cursor: pointer;
+}
+.title.is-touch {
+  color: blue;
+  background-color: pink;
+}
+.title.is-click {
+  color: red;
+  background-color: green;
+}
