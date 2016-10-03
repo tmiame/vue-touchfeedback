@@ -5,15 +5,15 @@
 </head>
 <body>
 <div id="app">
-  <h1>VueRouter + VueTouchfeedback!</h1>
+  <h1>Hello App! We will be using ES2015 in the code in the example</h1>
   <p>
-    <a v-link="{ path: '/foo' }" v-touchfeedback>Go to Foo</a>
-    <a v-link="{ path: '/bar' }" v-touchfeedback>Go to Bar</a>
+    <router-link to="/foo" v-touchfeedback>Go to Foo</router-link>
+    <router-link to="/bar" v-touchfeedback>Go to Bar</router-link>
   </p>
   <router-view></router-view>
 </div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.28/vue.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.10/vue-router.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue-router/2.0.0/vue-router.min.js"></script>
 <script src="../../dist/vue-touchfeedback.js"></script>
 <script src="./script.js"></script>
 <script>

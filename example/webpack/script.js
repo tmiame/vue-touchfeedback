@@ -1,8 +1,11 @@
-const Vue = require('vue')
-const VueTouchFeedback = require('../../dist/vue-touchfeedback')
+import Vue from 'vue'
+import VueTouchFeedback from '../../dist/vue-touchfeedback'
+import App from './App'
 
 Vue.use(VueTouchFeedback)
 
 new Vue({
-  el: 'body'
-})
+  render(h) {
+    return h(App)
+  }
+}).$mount('#app')

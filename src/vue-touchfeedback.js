@@ -6,10 +6,11 @@
 ;(function () {
 
   const vueTouchFeedback = {}
+
   const STATE_HOVER = 'is-touch'
   const STATE_CLICK = 'is-click'
 
-  const conf = {
+  const CONFIG = {
     isIE: (window.navigator.userAgent.toLowerCase().indexOf('msie') !== -1),
     isTouch: (typeof document.ontouchstart !== 'undefined'),
     isPointer: (typeof window.navigator.pointerEnabled !== 'undefined'),
@@ -44,122 +45,131 @@
     }
   }
 
-  const eventPointer = {
-    enter: (conf.isTouch) ? conf.touch.enter : (conf.isPointer) ? conf.pointer.enter : (conf.isMSPointer) ? conf.msPointer.enter : conf.mouse.enter,
-    leave: (conf.isTouch) ? conf.touch.leave : (conf.isPointer) ? conf.pointer.leave : (conf.isMSPointer) ? conf.msPointer.leave : conf.mouse.leave,
-    start: (conf.isTouch) ? conf.touch.start : (conf.isPointer) ? conf.pointer.start : (conf.isMSPointer) ? conf.msPointer.start : conf.mouse.start,
-    move: (conf.isTouch) ? conf.touch.move : (conf.isPointer) ? conf.pointer.move : (conf.isMSPointer) ? conf.msPointer.move : conf.mouse.move,
-    end: (conf.isTouch) ? conf.touch.end : (conf.isPointer) ? conf.pointer.end : (conf.isMSPointer) ? conf.msPointer.end : conf.mouse.end
+  const POINTER_EVENT = {
+    enter: (CONFIG.isTouch) ? CONFIG.touch.enter : (CONFIG.isPointer) ? CONFIG.pointer.enter : (CONFIG.isMSPointer) ? CONFIG.msPointer.enter : CONFIG.mouse.enter,
+    leave: (CONFIG.isTouch) ? CONFIG.touch.leave : (CONFIG.isPointer) ? CONFIG.pointer.leave : (CONFIG.isMSPointer) ? CONFIG.msPointer.leave : CONFIG.mouse.leave,
+    start: (CONFIG.isTouch) ? CONFIG.touch.start : (CONFIG.isPointer) ? CONFIG.pointer.start : (CONFIG.isMSPointer) ? CONFIG.msPointer.start : CONFIG.mouse.start,
+    move: (CONFIG.isTouch) ? CONFIG.touch.move : (CONFIG.isPointer) ? CONFIG.pointer.move : (CONFIG.isMSPointer) ? CONFIG.msPointer.move : CONFIG.mouse.move,
+    end: (CONFIG.isTouch) ? CONFIG.touch.end : (CONFIG.isPointer) ? CONFIG.pointer.end : (CONFIG.isMSPointer) ? CONFIG.msPointer.end : CONFIG.mouse.end
+  }
+
+  const TOUCH_EVENT = {
+    TAP: false,
+
+    touchAddClass(el) {
+      return (ev) => el.classList.add(STATE_HOVER)
+    },
+
+    tapedTouchStart(el) {
+      return (ev) => this.TAP = true
+    },
+    tapedTouchMove(el) {
+      return (ev) => {
+        if (this.TAP) this.TAP = false
+      }
+    },
+    tapedTouchEnd(el) {
+      return (ev) => {
+        if (!this.TAP) {
+          return
+        }
+        el.classList.add(STATE_CLICK)
+        setTimeout(() => {
+          el.classList.remove(STATE_CLICK)
+        }, 100)
+      }
+    },
+    tapedTouchEndAnimation(el) {
+      return (ev) => {
+        if (!this.TAP) {
+          return
+        }
+        el.classList.add(STATE_CLICK)
+      }
+    },
+
+    // remove
+    removeHover(el) {
+      return (ev) => el.classList.remove(STATE_HOVER)
+    },
+    removeClick(el) {
+      return (ev) => el.classList.remove(STATE_CLICK)
+    },
+    removeAll(el) {
+      return (ev) => {
+        if (el.classList.contains(STATE_HOVER)) {
+          el.classList.remove(STATE_HOVER)
+        }
+        if (el.classList.contains(STATE_CLICK)) {
+          el.classList.remove(STATE_CLICK)
+        }
+      }
+    }
   }
 
 
   vueTouchFeedback.install = (Vue) => {
     Vue.directive('touchfeedback', {
-      priority: Vue.directive('on').priority,
-      TAP: false,
-
-      touchAddClass(e) {
-        this.classList.add(STATE_HOVER)
-      },
-
-      tapedTouchStart(e) {
-        this.TAP = true
-      },
-      tapedTouchMove(e) {
-        if (this.TAP) this.TAP = false
-      },
-      tapedTouchEnd(e) {
-        if (!this.TAP) {
-          return
-        }
-        this.classList.add(STATE_CLICK)
-        setTimeout(() => {
-          this.classList.remove(STATE_CLICK)
-        }, 100)
-      },
-      tapedTouchEndAnimation(e) {
-        if (!this.TAP) {
-          return
-        }
-        this.classList.add(STATE_CLICK)
-      },
-
-      // remove
-      removeHover() {
-        this.classList.remove(STATE_HOVER)
-      },
-      removeClick() {
-        this.classList.remove(STATE_CLICK)
-      },
-      removeAll() {
-        if (this.el.classList.contains(STATE_HOVER)) {
-          this.el.classList.remove(STATE_HOVER)
-        }
-        if (this.el.classList.contains(STATE_CLICK)) {
-          this.el.classList.remove(STATE_CLICK)
-        }
-      },
-
-      bind() {
-        if ((this.arg && this.arg !== 'animation')) {
-          console.warn('[vue-touchfeedback] arg error')
+      bind(el, binding) {
+        if ((binding.arg && binding.arg !== 'animation')) {
+          console.warn('[vue-touchfeedback] arg name error')
         }
 
-        if (this.arg === 'animation') {
-          if (this.modifiers.hover) {
-            this.el.addEventListener(eventPointer.enter, this.touchAddClass, false)
-            this.el.addEventListener('webkitAnimationEnd', this.removeHover, false)
-            this.el.addEventListener('MSAnimationEnd', this.removeHover, false)
-            this.el.addEventListener('oanimationend', this.removeHover, false)
-            this.el.addEventListener('animationend', this.removeHover, false)
+        if (binding.arg === 'animation') {
+          if (binding.modifiers.hover) {
+            el.addEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false)
+            el.addEventListener('webkitAnimationEnd', TOUCH_EVENT.removeHover(el), false)
+            el.addEventListener('MSAnimationEnd', TOUCH_EVENT.removeHover(el), false)
+            el.addEventListener('oanimationend', TOUCH_EVENT.removeHover(el), false)
+            el.addEventListener('animationend', TOUCH_EVENT.removeHover(el), false)
           }
-          if (this.modifiers.click) {
-            this.el.addEventListener(eventPointer.start, this.tapedTouchStart, false)
-            this.el.addEventListener(eventPointer.move, this.tapedTouchMove, false)
-            this.el.addEventListener(eventPointer.end, this.tapedTouchEndAnimation, false)
-            this.el.addEventListener('webkitAnimationEnd', this.removeClick, false)
-            this.el.addEventListener('MSAnimationEnd', this.removeClick, false)
-            this.el.addEventListener('oanimationend', this.removeClick, false)
-            this.el.addEventListener('animationend', this.removeClick, false)
+          if (binding.modifiers.click) {
+            el.addEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false)
+            el.addEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false)
+            el.addEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEndAnimation(el), false)
+            el.addEventListener('webkitAnimationEnd', TOUCH_EVENT.removeClick(el), false)
+            el.addEventListener('MSAnimationEnd', TOUCH_EVENT.removeClick(el), false)
+            el.addEventListener('oanimationend', TOUCH_EVENT.removeClick(el), false)
+            el.addEventListener('animationend', TOUCH_EVENT.removeClick(el), false)
           }
         } else {
           // Hover
-          this.el.addEventListener(eventPointer.enter, this.touchAddClass, false)
-          this.el.addEventListener(eventPointer.leave, this.removeHover, false)
+          el.addEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false)
+          el.addEventListener(POINTER_EVENT.leave, TOUCH_EVENT.removeHover(el), false)
           // Click
-          this.el.addEventListener(eventPointer.start, this.tapedTouchStart, false)
-          this.el.addEventListener(eventPointer.move, this.tapedTouchMove, false)
-          this.el.addEventListener(eventPointer.end, this.tapedTouchEnd, false)
+          el.addEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false)
+          el.addEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false)
+          el.addEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEnd(el), false)
         }
       },
 
-      unbind() {
-        this.removeAll()
-        if (this.arg === 'animation') {
-          if (this.modifiers.hover) {
-            this.el.removeEventListener(eventPointer.enter, this.touchAddClass, false)
-            this.el.removeEventListener('webkitAnimationEnd', this.removeHover, false)
-            this.el.removeEventListener('MSAnimationEnd', this.removeHover, false)
-            this.el.removeEventListener('oanimationend', this.removeHover, false)
-            this.el.removeEventListener('animationend', this.removeHover, false)
+      unbind(el, binding) {
+        // this.removeAll()
+        if (binding.arg === 'animation') {
+          if (binding.modifiers.hover) {
+            el.removeEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false)
+            el.removeEventListener('webkitAnimationEnd', TOUCH_EVENT.removeHover(el), false)
+            el.removeEventListener('MSAnimationEnd', TOUCH_EVENT.removeHover(el), false)
+            el.removeEventListener('oanimationend', TOUCH_EVENT.removeHover(el), false)
+            el.removeEventListener('animationend', TOUCH_EVENT.removeHover(el), false)
           }
-          if (this.modifiers.click) {
-            this.el.removeEventListener(eventPointer.start, this.tapedTouchStart, false)
-            this.el.removeEventListener(eventPointer.move, this.tapedTouchMove, false)
-            this.el.removeEventListener(eventPointer.end, this.tapedTouchEndAnimation, false)
-            this.el.removeEventListener('webkitAnimationEnd', this.removeClick, false)
-            this.el.removeEventListener('MSAnimationEnd', this.removeClick, false)
-            this.el.removeEventListener('oanimationend', this.removeClick, false)
-            this.el.removeEventListener('animationend', this.removeClick, false)
+          if (binding.modifiers.click) {
+            el.removeEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false)
+            el.removeEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false)
+            el.removeEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEndAnimation(el), false)
+            el.removeEventListener('webkitAnimationEnd', TOUCH_EVENT.removeClick(el), false)
+            el.removeEventListener('MSAnimationEnd', TOUCH_EVENT.removeClick(el), false)
+            el.removeEventListener('oanimationend', TOUCH_EVENT.removeClick(el), false)
+            el.removeEventListener('animationend', TOUCH_EVENT.removeClick(el), false)
           }
         } else {
           // Hover
-          this.el.removeEventListener(eventPointer.enter, this.touchAddClass, false)
-          this.el.removeEventListener(eventPointer.leave, this.removeHover, false)
+          el.removeEventListener(POINTER_EVENT.enter, TOUCH_EVENT.touchAddClass(el), false)
+          el.removeEventListener(POINTER_EVENT.leave, TOUCH_EVENT.removeHover(el), false)
           // Click
-          this.el.removeEventListener(eventPointer.start, this.tapedTouchStart, false)
-          this.el.removeEventListener(eventPointer.move, this.tapedTouchMove, false)
-          this.el.removeEventListener(eventPointer.end, this.tapedTouchEnd, false)
+          el.removeEventListener(POINTER_EVENT.start, TOUCH_EVENT.tapedTouchStart(el), false)
+          el.removeEventListener(POINTER_EVENT.move, TOUCH_EVENT.tapedTouchMove(el), false)
+          el.removeEventListener(POINTER_EVENT.end, TOUCH_EVENT.tapedTouchEnd(el), false)
         }
       }
     })

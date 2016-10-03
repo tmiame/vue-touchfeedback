@@ -1,6 +1,6 @@
 # vue-touchfeedback
 
-> Touch Feedback for Vue.js
+> Touch Feedback plugin for Vue.js 2.0 & 1.0.x
 
 ## Demo
 
