@@ -1,7 +1,7 @@
 {
   "name": "vue-touchfeedback",
   "description": "Touch Feedback plugin for Vue.js 2.0 & 1.0.x",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "author": "tmiame <tmaime@gmail.com> (https://tmiame.com/)",
   "license": "MIT",
   "main": "dist/vue-touchfeedback.js",
